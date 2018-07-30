@@ -52,6 +52,23 @@ public class DBUtils {
 	}
 	
 	/**
+	 * 断开数据库连接
+	 * @param conn
+	 */
+	public static void closeConnection(Connection conn){
+			try {
+				//如果数据库的对象不为空，关闭该对象
+				if(conn != null){
+				conn.close();
+			} 
+				}catch (SQLException e) {
+				// 将异常封装成自定义对象
+				throw new DaoException("关闭连接对象失败",e);
+			}
+		}
+	
+	
+	/**
 	 * 开启事务
 	 * @param conn 要开启事务的数据库连接
 	 */
@@ -85,7 +102,10 @@ public class DBUtils {
 	 */
 	public static void rollback(Connection conn){
 		try {
+			//回滚事务
 			conn.rollback();
+			//将事务的自动提交模式设为真
+			conn.setAutoCommit(true);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
