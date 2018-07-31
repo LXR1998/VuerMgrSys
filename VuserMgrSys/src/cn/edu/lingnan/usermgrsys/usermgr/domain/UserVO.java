@@ -14,10 +14,11 @@ public class UserVO {
 	private Date Rgsdate;		//注册日期
 	private String Utype;		//会员类型（权限）	
 	private String Email;		//E-mail地址
+	private int Status;			//状态
 	
 	
 	//主键
-	public void UserId(int _UserId){
+	public void setUserId(int _UserId){
 		UserId=_UserId;
 	}
 	public int getUserId(){
@@ -59,4 +60,12 @@ public class UserVO {
 	public String getEmail(){
 		return Email;
 	}
+	
+	//状态
+		public void setStatus(int _Status){
+			Status=_Status;
+		}
+		public int getStatus(){
+			return Status;
+		}
 }

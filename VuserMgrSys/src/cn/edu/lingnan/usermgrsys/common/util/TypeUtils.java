@@ -4,6 +4,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import cn.edu.lingnan.usermgrsys.common.exceptiom.DateException;
+import cn.edu.lingnan.usermgrsys.common.exceptiom.EmailException;
+
 /**
  * 类型转换工具类
  * @author 11638
@@ -25,8 +28,7 @@ public class TypeUtils {
 			date = sdf.parse(str);
 		} catch (ParseException e) {
 			// 将异常封装成自定义异常
-//			throw new DateException("字符串转换为日期出错",e);
-			e.printStackTrace();
+			throw new DateException("字符串转换为日期出错",e);
 		}
 			
 		return date;
@@ -45,7 +47,7 @@ public class TypeUtils {
 		//调用format方法，将日期转化成字符串
 		str = sdf.format(date);
 		}catch(Exception e){
-//			throw new DateException("日期转换为字符串出错",e);
+			throw new DateException("日期转换为字符串出错",e);
 		}
 		return str;
 	}
@@ -55,8 +57,8 @@ public class TypeUtils {
 	 * @param email
 	 * @return boolean
 	 */
-	public static boolean checkEmail(String email){
-		
+	public static boolean checkEmail(String email){//有错误，待改
+		try {
 		String mail = email.replaceAll
 				("^(\\w+((-\\w+)|(\\.\\w+))*)\\+\\w+((-\\w+)|(\\.\\w+))*\\@[A-Za-z0-9]+((\\.|-)[A-Za-z0-9]+)*\\.[A-Za-z0-9]+$ ","");
 		
@@ -65,6 +67,9 @@ public class TypeUtils {
 		else{
 			System.out.println("邮箱格式错误");
 			return false;
+			}
+		}catch(Exception e){
+			throw new EmailException("邮箱格式错误",e);
 		}
 	}
 

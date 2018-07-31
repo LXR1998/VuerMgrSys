@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import cn.edu.lingnan.usermgrsys.usermgr.controller.UserController;
 import cn.edu.lingnan.usermgrsys.usermgr.domain.UserVO;
 
 public class IndexFrame implements BaseFrame{
@@ -26,22 +27,22 @@ public class IndexFrame implements BaseFrame{
 			int i = -1;
 			//读取用户从控制台输入的信息，如果输入的值正确，则中断循环，否则提示错误信息，返回循环
 			while(true){
-				
 				try {
-					i=Integer.parseInt(br.readLine());
-					break;
-				
+					i =Integer.parseInt(br.readLine());				
 				} catch (Exception e) {
 					//提示错误
 					System.out.println("输入错误，您只能输入1~3的数字");
 					System.out.println("请您重新输入：");
+					
 				}
-				
+				System.out.println("-----i的值是："+i);
 				switch(i){
 				case 1:
 					this.LoginShow();
+					break;//中断switch
 				case 2:
-					this.addShow(type);
+					this.addShow("注册");//中断switch
+					break;
 				case 3:
 					System.out.println("感谢您的使用，再会！");
 					System.exit(0);
@@ -49,18 +50,59 @@ public class IndexFrame implements BaseFrame{
 					System.out.println("您的输入有误，请重新输入！");
 				}
 			}
-			
-			
 		}
 	}
 
+	/**
+	 * 登录页面
+	 */
+	public void LoginShow(){
+		//声明缓冲对象,用于接收控制台输入的信息
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		System.out.println("          用户登录界面 ");
+		System.out.println("=================================");
+		System.out.println("请输入您的用户名：");
+		 
+			try {
+				String Uname = br.readLine();
+				System.out.println("请输入您的密码：");
+				String Passwd = br.readLine();
+				//声明控制层对象
+				UserController UserController = new UserController();
+				//调用控制层的dologin方法,并将控制层得到的返回值数据传给user
+				UserVO user = UserController.dologin(Uname, Passwd);
+				//如果user的数据不为空，则表示用户名和密码能够对应
+				if(user != null){
+					System.out.println("登陆成功");
+					System.out.println("=================================");
+					//调用主界面
+					AdminFrame m = new AdminFrame(user);
+					m.loginSuccShow();
+					//退出当前界面
+					System.exit(0);
+				}else{
+					//登陆失败，显示失败信息
+					System.out.println("登陆失败！！");
+				}
+			} catch (IOException e) {
+				// 显示异常信息
+				System.out.println(e.getMessage());
+			}
+		}
+		
 	/**
 	 * 注册页面
 	 */
 	@Override 
 	public void addShow(String type) {
 		
+		//声明缓冲对象，用于接收而控制台输入的信息
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		System.out.println("          用户注册界面 ");
+		System.out.println("=================================");
+		System.out.println("请输入您的用户名：");
+		
+		
 		
 		
 	}
