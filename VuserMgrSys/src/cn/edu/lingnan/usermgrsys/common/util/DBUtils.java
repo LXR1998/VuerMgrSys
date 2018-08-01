@@ -130,7 +130,22 @@ public class DBUtils {
 			throw new DaoException("关闭声明对象失败……",e);
 //					e.printStackTrace();
 				}
-
 	}
-
+	
+	/**
+	 * 关闭资源
+	 */
+	public static void closeStatement(Statement stmt){
+		try {
+			
+			//如果声明对象不为空，关闭该对象
+			if(stmt!=null){
+				stmt.close(); 
+			}
+		} catch (SQLException e) {
+					// 自定义异常对象
+			throw new DaoException("关闭声明对象失败……",e);
+//					e.printStackTrace();
+				}
+	}
 }

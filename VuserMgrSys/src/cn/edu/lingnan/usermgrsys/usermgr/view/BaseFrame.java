@@ -23,8 +23,13 @@ public interface BaseFrame {
 	/**
 	 * 修改信息的页面显示
 	 * @param type
-	 * @param user
 	 */
-	public void updateShow(String type,UserVO user);
+	public void updateShow(String type);
+	
+	/**
+	 * 删除用户
+	 * @param type
+	 */
+	public void deleteShow(String type);
 
 }

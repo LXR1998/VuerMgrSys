@@ -60,7 +60,7 @@ public class TypeUtils {
 	public static boolean checkEmail(String email){//有错误，待改
 		try {
 		String mail = email.replaceAll
-				("^(\\w+((-\\w+)|(\\.\\w+))*)\\+\\w+((-\\w+)|(\\.\\w+))*\\@[A-Za-z0-9]+((\\.|-)[A-Za-z0-9]+)*\\.[A-Za-z0-9]+$ ","");
+				("^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*\\.[a-zA-Z0-9]{2,6}$","");
 		
 		if(mail.length()==0)
 			return true;

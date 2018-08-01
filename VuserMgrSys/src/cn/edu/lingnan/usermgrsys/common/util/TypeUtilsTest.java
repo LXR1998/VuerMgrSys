@@ -11,7 +11,7 @@ public class TypeUtilsTest {
 	@Test
 	public void testStrToDate() {
 		Date date = null;
-		date = TypeUtils.strToDate("2012-2-5");
+		date = new java.sql.Date(TypeUtils.strToDate("2012-2-5").getTime());
 		System.out.println("字符串转日期：");
 		System.out.println(date);
 	}
