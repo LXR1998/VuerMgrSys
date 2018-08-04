@@ -11,9 +11,8 @@ public interface BaseFrame {
 	
 	/**
 	 * 增加用户的页面显示
-	 * @param type
 	 */
-	public void addShow(String type);
+	public void addShow();
 	
 	/**
 	 * 查询
@@ -22,14 +21,12 @@ public interface BaseFrame {
 	
 	/**
 	 * 修改信息的页面显示
-	 * @param type
 	 */
-	public void updateShow(String type);
+	public void updateShow();
 	
 	/**
 	 * 删除用户
-	 * @param type
 	 */
-	public void deleteShow(String type);
+	public void deleteShow();
 
 }

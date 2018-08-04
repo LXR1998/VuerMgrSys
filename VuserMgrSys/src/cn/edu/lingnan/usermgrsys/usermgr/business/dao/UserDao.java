@@ -2,6 +2,7 @@ package cn.edu.lingnan.usermgrsys.usermgr.business.dao;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Vector;
 
 import cn.edu.lingnan.usermgrsys.common.dao.BaseDao;
 import cn.edu.lingnan.usermgrsys.usermgr.domain.UserVO;
@@ -14,7 +15,8 @@ import cn.edu.lingnan.usermgrsys.usermgr.domain.UserVO;
 public interface UserDao extends BaseDao{
 	/**
 	 * 用户登录
-	 * @param user 用户信息
+	 * @param name 用户名
+	 * @param password 用户密码
 	 * @return 用户信息
 	 */
 	public  UserVO login(String name,String password);
@@ -28,56 +30,57 @@ public interface UserDao extends BaseDao{
 
 	/**
 	 * 删除用户信息
-	 * @param 用户ID
-	 * @return Boolean 删除结果
+	 * @param UserId 用户ID
+	 * @return 删除结果
 	 */
 	public boolean deleteUser(int UserId);
 	
 	/**
 	 * 修改用户信息
-	 * @param 用户密码，用户Email，
+	 * @param UserId 用户id
+	 * @param Passwd 用户密码
+	 * @param Email 用户Email
+	 * @return 修改结果
 	 */
 	public boolean updateUserById(int UserId,String Passwd,String Email);
 	
 	/**
-	 * 根据ID查询用户信息
-	 * @param 用户ID
-	 * @return UserVO用户信息
+	 * 根据id查找用户信息
+	 * @param UserId 用户ID
+	 * @return 用户信息
 	 */
 	public UserVO searchUserById(int UserId);
 	
 	/**
-	 * 根据用户名查询用户信息（支持模糊查询）
-	 * @param 用户名
-	 * @return 用户信息
+	 * 根据用户名查找用户信息
+	 * @param Uname 用户名
+	 * @return 用户信息的结果集
 	 */
-	public List<UserVO> searchByUname(String Uname);
+	public Vector<UserVO> searchByUname(String Uname);
 	
 	/**
-	 * 查询全部用户信息
-	 * @return UserVO用户信息
+	 * 查询所有用户的信息
+	 * @return 所有用户的信息的结果集
 	 */
-	public List<UserVO> searchAllUser();
+	public Vector<UserVO> searchAllUser();
+
 	/**
 	 * 分页查询
-	 * @return UserVO 用户信息
+	 * @param pageNo 需要的分页页数
+	 * @param pageSize 每页的记录数
+	 * @return 所求的页面的用户信息
 	 */
-	public List<UserVO> searchUserByPage(int UserId);
+	public Vector<UserVO> searchUserByPage(int pageNo, int pageSize);
 	
 	/**
-	 * 查询最大的ID号
+	 * 查找最大的ID号
+	 * @return 最大Id号
 	 */
 	public int findMaxId();
 	
-	/**
-	 * 查询所有有效用户
-	 */
-	public List<UserVO> findAllValid();
 	
-	/**
-	 * 获取记录数量
-	 */
-	public int getRecordCount();
+	
+
 	
 	
 }

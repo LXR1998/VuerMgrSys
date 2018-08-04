@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Vector;
 
 import cn.edu.lingnan.usermgrsys.common.exceptiom.DaoException;
 import cn.edu.lingnan.usermgrsys.common.util.DBUtils;
@@ -30,7 +31,7 @@ public class UserDaoImpl implements UserDao{
 	
 	/**
 	 * 用户登录
-	 * @param Uname用户名
+	 * @param Uname 用户名
 	 * @param Passwd 用户密码
 	 * @return 是否有该用户
 	 */
@@ -78,7 +79,7 @@ public class UserDaoImpl implements UserDao{
 	/**
 	 * 添加用户/注册用户
 	 * @param user 用户信息
-	 * @return Boolean 添加/注册是否成功
+	 * @return 添加/注册是否成功
 	 */
 	public boolean addUser(UserVO user){
 		boolean flag = false;
@@ -116,8 +117,8 @@ public class UserDaoImpl implements UserDao{
 	
 	/**
 	 * 删除用户信息
-	 * @param 用户ID
-	 * @return Boolean 删除结果
+	 * @param UserId 用户ID
+	 * @return 删除结果
 	 */
 	@Override
 	public boolean deleteUser(int UserId) {
@@ -149,7 +150,10 @@ public class UserDaoImpl implements UserDao{
 	
 	/**
 	 * 修改用户信息
-	 * @param 用户密码，用户Email，
+	 * @param UserId 用户Id
+	 * @param Passwd 用户密码
+	 * @param Email 用户Email
+	 * @return 更新的结果
 	 */
 	@Override
 	public boolean updateUserById(int UserId,String Passwd, String Email) {
@@ -181,8 +185,8 @@ public class UserDaoImpl implements UserDao{
 	
 	/**
 	 * 根据ID查询用户信息
-	 * @param 用户ID
-	 * @return UserVO用户信息
+	 * @param UserId 用户ID
+	 * @return 用户信息
 	 */
 	@Override
 	public UserVO searchUserById(int UserId) {
@@ -197,7 +201,7 @@ public class UserDaoImpl implements UserDao{
 			//把查询得到的结果放进结果集rs中
 			rs = pstam.executeQuery();
 			//遍历结果集中的记录，并把每一行记录中的属性赋值给user
-			if(rs.next()){
+			while(rs.next()){
 				user = new UserVO();
 				user.setUserId(rs.getInt("UserId"));
 				user.setUname(rs.getString("Uname"));
@@ -219,25 +223,27 @@ public class UserDaoImpl implements UserDao{
 	}
 	
 	/**
-	 * 根据用户名查询用户信息（支持模糊查询）
-	 * @param 用户名
+	 * 根据用户名查询用户信息（不支持模糊查询）
+	 * @param Uname 用户名
 	 * @return 用户信息
 	 */
 	@Override
-	public List<UserVO> searchByUname(String Uname) {
-		List<UserVO> ListUV = null;
+	public Vector<UserVO> searchByUname(String Uname) {
+		Vector<UserVO> v = new Vector<UserVO>();
 		PreparedStatement pstam = null;
 		ResultSet rs = null;
-		String sql = "select * from v_user where Uname like %?%";
-		
+		UserVO user = new UserVO();
+		String sql = "select * from v_user where Uname = ?";
+
 		try {
 			pstam = conn.prepareStatement(sql);
-			pstam.setString(1, Uname);
+			pstam.setString(1,Uname);
+			
 			//把查询得到的结果放进结果集rs中
 			rs = pstam.executeQuery();
 			//遍历结果集中的记录，并把每一行记录中的属性赋值给user
-			if(rs.next()){
-				UserVO user = new UserVO();
+			while(rs.next()){
+				
 				user.setUserId(rs.getInt("UserId"));
 				user.setUname(rs.getString("Uname"));
 				user.setPasswd(rs.getString("Passwd"));
@@ -245,27 +251,29 @@ public class UserDaoImpl implements UserDao{
 				user.setEmail(rs.getString("Email"));
 				user.setUtype(rs.getString("Utype"));
 				user.setStatus(rs.getInt("Status"));
-				
-				ListUV.add(user);
+
+				v.add(user);
 			}
+			
 		} catch (SQLException e) {
 			System.out.println("查询用户信息时出错了，请重试！");
-			throw new DaoException("数据库语句执行时出错",e);
+			throw new DaoException("UserDaoImpl:数据库语句执行时出错",e);
 		}finally{
 			DBUtils.closeStatement(rs, pstam);
 		}
 		
-		return ListUV;
+		return v;
 	}
 	/**
 	 * 查询全部用户信息
-	 * @return UserVO用户信息
+	 * @return 用户信息
 	 */
 	@Override
-	public List<UserVO> searchAllUser() {
-		List<UserVO> ListUV = null;
+	public Vector<UserVO> searchAllUser() {
+		Vector<UserVO> v = new Vector<UserVO>();
 		PreparedStatement pstam = null;
 		ResultSet rs = null;
+		UserVO user = null;
 		String sql = "select * from v_user";
 		
 		try {
@@ -273,8 +281,8 @@ public class UserDaoImpl implements UserDao{
 			//把查询得到的结果放进结果集rs中
 			rs = pstam.executeQuery();
 			//遍历结果集中的记录，并把每一行记录中的属性赋值给user
-			if(rs.next()){
-				UserVO user = new UserVO();
+			while(rs.next()){
+				user = new UserVO();
 				user.setUserId(rs.getInt("UserId"));
 				user.setUname(rs.getString("Uname"));
 				user.setPasswd(rs.getString("Passwd"));
@@ -282,7 +290,7 @@ public class UserDaoImpl implements UserDao{
 				user.setEmail(rs.getString("Email"));
 				user.setUtype(rs.getString("Utype"));
 				user.setStatus(rs.getInt("Status"));
-				ListUV.add(user);
+				v.add(user);
 			}
 		} catch (SQLException e) {
 			System.out.println("查询用户信息时出错了，请重试！");
@@ -291,7 +299,7 @@ public class UserDaoImpl implements UserDao{
 			DBUtils.closeStatement(rs, pstam);
 		}
 		
-		return ListUV;
+		return v;
 	}
 	/**
 	 * 查找最大的用户ID号
@@ -320,8 +328,8 @@ public class UserDaoImpl implements UserDao{
 	 * 分页查询
 	 */
 	@Override
-	public List<UserVO> searchUserByPage(int UserId) {
-		List<UserVO> ListUV = null;
+	public Vector<UserVO> searchUserByPage(int pageNo,int pageSize) {
+		Vector<UserVO> v = new Vector<UserVO>();
 		PreparedStatement pstam = null;
 		ResultSet rs = null;
 		String sql = "select * from "
@@ -331,10 +339,12 @@ public class UserDaoImpl implements UserDao{
 		
 		try {
 			pstam = conn.prepareStatement(sql);
+			pstam.setInt(1, (pageNo-1)*pageSize);
+			pstam.setInt(2, pageNo*pageSize);
 			//把查询得到的结果放进结果集rs中
 			rs = pstam.executeQuery();
 			//遍历结果集中的记录，并把每一行记录中的属性赋值给user
-			if(rs.next()){
+			while(rs.next()){
 				UserVO user = new UserVO();
 				user.setUserId(rs.getInt("UserId"));
 				user.setUname(rs.getString("Uname"));
@@ -344,61 +354,16 @@ public class UserDaoImpl implements UserDao{
 				user.setUtype(rs.getString("Utype"));
 				user.setStatus(rs.getInt("Status"));
 				
-				ListUV.add(user);
+				v.add(user);
 			}
 		} catch (SQLException e) {
-			System.out.println("查询用户信息时出错了，请重试！");
+			System.out.println("分页查询用户信息时出错了，请重试！");
 			throw new DaoException("数据库语句执行时出错",e);
 		}finally{
 			DBUtils.closeStatement(rs, pstam);
 		}
 		
-		return ListUV;
+		return v;
 	}
 
-	/**
-	 * 查询所有有效用户
-	 */
-	@Override
-	public List<UserVO> findAllValid() {
-		List<UserVO> ListUV = null;
-		PreparedStatement pstam = null;
-		ResultSet rs = null;
-		String sql = "select * from v_user where Status = 0";
-		
-		try {
-			pstam = conn.prepareStatement(sql);
-			//把查询得到的结果放进结果集rs中
-			rs = pstam.executeQuery();
-			//遍历结果集中的记录，并把每一行记录中的属性赋值给user
-			if(rs.next()){
-				UserVO user = new UserVO();
-				user.setUserId(rs.getInt("UserId"));
-				user.setUname(rs.getString("Uname"));
-				user.setPasswd(rs.getString("Passwd"));
-				user.setRgsdate(rs.getDate("Rgsdate"));
-				user.setEmail(rs.getString("Email"));
-				user.setUtype(rs.getString("Utype"));
-				user.setStatus(rs.getInt("Status"));
-				
-				ListUV.add(user);
-			}
-		} catch (SQLException e) {
-			System.out.println("查询用户信息时出错了，请重试！");
-			throw new DaoException("数据库语句执行时出错",e);
-		}finally{
-			DBUtils.closeStatement(rs, pstam);
-		}
-		
-		return ListUV;
-	}
-	
-	/**
-	 * 获取记录数量
-	 */
-	@Override
-	public int getRecordCount() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
 }

@@ -17,7 +17,7 @@ public class TypeUtils {
 	/**
 	 * 字符串转换为日期
 	 * @param str 指定的字符串
-	 * @return 转换后的日期
+	 * @return date 转换后的日期
 	 */
 	public static Date strToDate(String str){
 		Date date = null;
@@ -36,8 +36,8 @@ public class TypeUtils {
 	
 	/**
 	 * 日期转换成字符串
-	 * @param date
-	 * @return 字符串
+	 * @param date 日期对象
+	 * @return str 转换成功之后的字符串
 	 */
 	public static String dateToStr(Date date){
 		String str = null;
@@ -54,10 +54,10 @@ public class TypeUtils {
 	
 	/**
 	 * 邮箱检验格式
-	 * @param email
-	 * @return boolean
+	 * @param email 字符串对象邮箱
+	 * @return boolean 判断结果
 	 */
-	public static boolean checkEmail(String email){//有错误，待改
+	public static boolean checkEmail(String email){
 		try {
 		String mail = email.replaceAll
 				("^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*\\.[a-zA-Z0-9]{2,6}$","");

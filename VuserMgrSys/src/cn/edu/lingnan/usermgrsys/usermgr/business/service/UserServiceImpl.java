@@ -3,6 +3,7 @@ package cn.edu.lingnan.usermgrsys.usermgr.business.service;
 import java.sql.Connection;
 import java.sql.Date;
 import java.util.List;
+import java.util.Vector;
 
 import cn.edu.lingnan.usermgrsys.common.constant.EnumType;
 import cn.edu.lingnan.usermgrsys.common.dao.DaoFactory;
@@ -44,9 +45,9 @@ public class UserServiceImpl implements UserService{
 	
 	/**
 	 * 用户登录的service方法
-	 * @param Uname
-	 * @param Passwd
-	 * @return UserVO 
+	 * @param Uname 用户名
+	 * @param Passwd 用户密码
+	 * @return UserVO 用户信息
 	 */
 	public UserVO login(String Uname,String Passwd){
 		//声明数据库连接对象，用于保存数据库连接对象
@@ -75,8 +76,10 @@ public class UserServiceImpl implements UserService{
 	
 	/**
 	 * 用户注册/添加用户信息
-	 * @param user用户信息
-	 * @return 添加/注册结果
+	 * @param Uname 用户名
+	 * @param Passwd 用户密码
+	 * @param Email 用户邮箱
+	 * @return boolean 添加/注册结果
 	 */
 	@Override
 	public boolean addUser(String Uname, String Passwd, String Email) {
@@ -118,7 +121,7 @@ public class UserServiceImpl implements UserService{
 	
 	/**
 	 * 删除用户
-	 * @param UserId
+	 * @param UserId 用户ID
 	 * @return Boolean 删除结果
 	 */
 	@Override
@@ -148,9 +151,10 @@ public class UserServiceImpl implements UserService{
 	
 	/**
 	 * 修改用户信息（只能修改密码和邮箱）
-	 * @param UserId
-	 * @param Passwd
-	 * @param Email
+	 * @param UserId 用户ID
+	 * @param Passwd 用户密码
+	 * @param Email 用户 邮箱
+	 * @return boolean 修改是否成功
 	 */
 	@Override
 	public boolean updateUserById(int UserId, String Passwd, String Email) {
@@ -164,7 +168,8 @@ public class UserServiceImpl implements UserService{
 		
 		//调用dao工厂类的getDao方法，取得制定类型的Dao接口的实现类，并赋值给Dao接口变量
 		UserDao userDao = (UserDao)DaoFactory.getDao(conn, EnumType.USER_DAO);
-		//调用userDao中的deleteUser方法，并将返回值赋给result
+		
+		//调用userDao中的updateUserById方法，并将返回值赋给result
 		result = userDao.updateUserById(UserId, Passwd, Email);
 		//调用DBUtils数据库工具类中的commit方法，提交事务
 		DBUtils.commit(conn);
@@ -193,7 +198,7 @@ public class UserServiceImpl implements UserService{
 		//调用dao工厂类的getDao方法，取得制定类型的Dao接口的实现类，并赋值给Dao接口变量
 		UserDao userDao = (UserDao)DaoFactory.getDao(conn, EnumType.USER_DAO);
 		
-		//调用dao中的login方法，进行登录操作，结果赋值给登录结果变量
+		//调用dao中的searchUserById方法，进行查询操作，并将结果传递给user变量
 		user = userDao.searchUserById(UserId);
 		
 		}catch(DaoException e){
@@ -210,35 +215,37 @@ public class UserServiceImpl implements UserService{
 	}
 	
 	/**
-	 * 根据用户名查找用户信息（支持模糊查询）
-	 * @param Uname用户名
-	 * @return user用户信息
+	 * 根据用户名查找用户信息（不支持模糊查询）
+	 * @param Uname 用户名
+	 * @return 用户信息
 	 */
 	@Override
-	public List<UserVO> searchByUname(String Uname) {
+	public Vector<UserVO> searchByUname(String Uname) {
 		Connection conn = null;
-		List<UserVO> ListUV = null;
-		UserVO user = null;
+		Vector<UserVO> v = new Vector<UserVO>();
 		try{
 		//调用数据库工具类中的getConnection方法，取得数据库的连接对象，并赋值非数据库连接对象变量conn
 		conn = DBUtils.getConnection();
 		//调用dao工厂类的getDao方法，取得制定类型的Dao接口的实现类，并赋值给Dao接口变量
 		UserDao userDao = (UserDao)DaoFactory.getDao(conn, EnumType.USER_DAO);
 		
-		//调用dao中的login方法，进行登录操作，结果赋值给登录结果变量
-		ListUV = userDao.searchAllUser();
-		
+		//调用dao中的searchByUname方法，进行查询操作，并将结果传递给Vector类型变量
+		v = userDao.searchByUname(Uname);
+		DBUtils.commit(conn);
+	
 		}catch(DaoException e){
 			//将自定义异常抛出
 			throw e;
 		}catch(Exception e){
 			//将异常封装成自定义异常并抛出
-			throw new ServiceException("查找用户出错啦！！",e);
+			DBUtils.rollback(conn);
+			System.out.println(e.getMessage());
+//			throw new ServiceException("UserServiceImpl查找用户出错啦！！",e);
 		}finally{
 			DBUtils.closeConnection(conn);
 		}
-		//返回用户登录结果
-		return ListUV;
+		//返回用户查询结果集
+		return v;
 	}
 	
 	/**
@@ -246,10 +253,10 @@ public class UserServiceImpl implements UserService{
 	 * @return UserVO用户信息
 	 */
 	@Override
-	public List<UserVO> searchAllUser() {
+	public Vector<UserVO> searchAllUser() {
 		//声明数据库连接对象，用于保存数据库连接对象
 		Connection conn = null;
-		List<UserVO> ListUV = null;
+		Vector<UserVO> v = new Vector<UserVO>();
 		UserVO user = null;
 		try{
 		//调用数据库工具类中的getConnection方法，取得数据库的连接对象，并赋值非数据库连接对象变量conn
@@ -257,8 +264,8 @@ public class UserServiceImpl implements UserService{
 		//调用dao工厂类的getDao方法，取得制定类型的Dao接口的实现类，并赋值给Dao接口变量
 		UserDao userDao = (UserDao)DaoFactory.getDao(conn, EnumType.USER_DAO);
 		
-		//调用dao中的login方法，进行登录操作，结果赋值给登录结果变量
-		ListUV = userDao.searchAllUser();
+		//调用dao中的searchAllUser方法，查询所有用户的信息
+		v = userDao.searchAllUser();
 		
 		}catch(DaoException e){
 			//将自定义异常抛出
@@ -270,7 +277,7 @@ public class UserServiceImpl implements UserService{
 			DBUtils.closeConnection(conn);
 		}
 		//返回用户登录结果
-		return ListUV;
+		return v;
 	}
 	
 	/**
@@ -278,10 +285,10 @@ public class UserServiceImpl implements UserService{
 	 * @return UserVO 用户信息
 	 */
 	@Override
-	public List<UserVO> searchUserByPage(int UserId) {
+	public Vector<UserVO> searchUserByPage(int pageNo,int pageSize) {
 		//声明数据库连接对象，用于保存数据库连接对象
 		Connection conn = null;
-		List<UserVO> ListUV = null;
+		Vector<UserVO> v = new Vector<UserVO>();
 		UserVO user = null;
 		try{
 		//调用数据库工具类中的getConnection方法，取得数据库的连接对象，并赋值非数据库连接对象变量conn
@@ -289,8 +296,8 @@ public class UserServiceImpl implements UserService{
 		//调用dao工厂类的getDao方法，取得制定类型的Dao接口的实现类，并赋值给Dao接口变量
 		UserDao userDao = (UserDao)DaoFactory.getDao(conn, EnumType.USER_DAO);
 		
-		//调用dao中的login方法，进行登录操作，结果赋值给登录结果变量
-		ListUV = userDao.searchUserByPage(UserId);
+		//调用dao中的searchUserByPage方法，进行分页查找用户信息的操作
+		v = userDao.searchUserByPage(pageNo,pageSize);
 		
 		}catch(DaoException e){
 			//将自定义异常抛出
@@ -302,6 +309,6 @@ public class UserServiceImpl implements UserService{
 			DBUtils.closeConnection(conn);
 		}
 		//返回用户登录结果
-		return ListUV;
+		return v;
 	}
 }

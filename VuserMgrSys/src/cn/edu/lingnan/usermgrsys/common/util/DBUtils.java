@@ -17,6 +17,7 @@ public class DBUtils {
 	/**
 	 * 获取数据库连接
 	 * 返回数据库的连接对象
+	 * @return 用户连接对象
 	 */
 	public static Connection getConnection()
 	{
@@ -53,7 +54,7 @@ public class DBUtils {
 	
 	/**
 	 * 断开数据库连接
-	 * @param conn
+	 * @param conn 用户连接对象
 	 */
 	public static void closeConnection(Connection conn){
 			try {
@@ -84,7 +85,7 @@ public class DBUtils {
 	
 	/**
 	 * 提交事务
-	 * @param conn
+	 * @param conn 用户连接对象
 	 */
 	public static void commit(Connection conn){
 		try {//提交事务
@@ -98,7 +99,7 @@ public class DBUtils {
 	
 	/**
 	 * 回滚事务
-	 * @param conn
+	 * @param conn 用户连接对象
 	 */
 	public static void rollback(Connection conn){
 		try {
@@ -114,6 +115,8 @@ public class DBUtils {
 	
 	/**
 	 * 关闭资源
+	 * @param rs 结果集对象
+	 * @param stmt 编译语句对象
 	 */
 	public static void closeStatement(ResultSet rs, Statement stmt){
 		try {
@@ -132,9 +135,10 @@ public class DBUtils {
 				}
 	}
 	
-	/**
-	 * 关闭资源
-	 */
+/**
+ * 关闭资源
+ * @param stmt 编译语句对象
+ */
 	public static void closeStatement(Statement stmt){
 		try {
 			

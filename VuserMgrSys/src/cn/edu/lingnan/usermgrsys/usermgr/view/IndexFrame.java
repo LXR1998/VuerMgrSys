@@ -43,7 +43,7 @@ public class IndexFrame implements BaseFrame{
 				this.LoginShow();
 				break;//中断switch
 			case 2:
-				this.addShow("注册");//中断switch
+				this.addShow();//中断switch
 				break;
 			case 3:
 				System.out.println("感谢您的使用，再会！");
@@ -96,7 +96,7 @@ public class IndexFrame implements BaseFrame{
 	 * 注册页面
 	 */
 	@Override 
-	public void addShow(String type) {
+	public void addShow() {
 		
 		//声明缓冲对象，用于接收而控制台输入的信息
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -135,13 +135,13 @@ public class IndexFrame implements BaseFrame{
 	}
 
 	@Override
-	public void updateShow(String type) {
+	public void updateShow() {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void deleteShow(String type) {
+	public void deleteShow() {
 		// TODO Auto-generated method stub
 		
 	}
